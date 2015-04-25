@@ -17,6 +17,9 @@ WHITE	 = "\033[1;37m"
 COLORS = [RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE]
 RESET	 = "\033[0m"
 
+COLOR_DICTIONARY = {'r':RED, 'g':GREEN, 'y':YELLOW, 'b':BLUE, 'm':MAGENTA, 'c':CYAN, 'w':WHITE}
+DEFAULT_COLOR = WHITE
+
 def usage():
 	print('usage: %s <options> <patterns>', sys.argv[0])
 	print('')
@@ -37,6 +40,9 @@ def usage():
 	print('')
 	print('eg)')
 	print('    echo "hello color" | %s "hello:r" "o:b" "c:y"' % sys.argv[0])
+
+def get_color(color):
+	return COLOR_DICTIONARY.get(color[0], DEFAULT_COLOR)
 
 def main():
 	try:
@@ -71,22 +77,7 @@ def main():
 			# pattern:color (could be abbr.)
 			pat = ar[0]
 			color = ar[1]
-			if color.startswith('r'):
-				cr = RED
-			elif color.startswith('g'):
-				cr = GREEN
-			elif color.startswith('y'):
-				cr = YELLOW 
-			elif color.startswith('b'):
-				cr = BLUE
-			elif color.startswith('m'):
-				cr = MAGENTA
-			elif color.startswith('c'):
-				cr = CYAN
-			elif color.startswith('w'):
-				cr = WHITE
-			else:
-				cr = WHITE
+			cr = get_color(color)
 
 		patterns.append(dict(pat='(%s)' % pat, sub='%s\g<1>%s' % (cr, RESET)))
 
@@ -107,5 +98,6 @@ def main():
 	except KeyboardInterrupt:
 		pass
 
-main()
+if __name__ == '__main__':
+	main()
 
